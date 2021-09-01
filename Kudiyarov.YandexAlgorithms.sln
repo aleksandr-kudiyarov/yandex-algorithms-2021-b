@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "A-Interactor", "A-Interactor", "{80284958-3004-44A4-BDD4-8329EADA22AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interactor", "Interactor\Interactor.csproj", "{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interactor.Tests", "Interactor.Tests\Interactor.Tests.csproj", "{40AC540F-B5C2-43CD-B59E-9332CEC63627}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5} = {80284958-3004-44A4-BDD4-8329EADA22AC}
+		{40AC540F-B5C2-43CD-B59E-9332CEC63627} = {80284958-3004-44A4-BDD4-8329EADA22AC}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40AC540F-B5C2-43CD-B59E-9332CEC63627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40AC540F-B5C2-43CD-B59E-9332CEC63627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40AC540F-B5C2-43CD-B59E-9332CEC63627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40AC540F-B5C2-43CD-B59E-9332CEC63627}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
