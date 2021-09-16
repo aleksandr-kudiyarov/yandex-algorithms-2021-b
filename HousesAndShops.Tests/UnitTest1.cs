@@ -7,6 +7,7 @@ namespace HousesAndShops.Tests
     {
         [Theory]
         [InlineData(new[] { 2, 0, 1, 1, 0, 1, 0, 2, 1, 2 }, 3)]
+        [InlineData(new[] { 1, 2, 0, 0, 1, 0, 2, 1, 0, 2 }, 2)]
         public void Test1(IList<int> enumerable, int expected)
         {
             var actual = HousesAndShopsWorker.GetResult(enumerable);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HousesAndShops
 {
@@ -27,62 +28,55 @@ namespace HousesAndShops
 
     public static class HousesAndShopsWorker
     {
-        public static int GetResult(IList<int> buildings)
+        public static int? GetResult(IList<int> buildings)
         {
-            int? min = null;
+            var dict = new Dictionary<int, int?>();
+            
+            int? rightShop = null;
             
             for (var i = 0; i < buildings.Count; i++)
             {
-                if (buildings[i] != 1) continue;
-                
-                var next = GetNext(buildings, ref i);
-                var prev = GetPrev(buildings, ref i);
-                var currMin = GetMinForHouse(ref prev, ref next, ref i);
-
-                if (min == null || currMin > min)
+                switch (buildings[i])
                 {
-                    min = currMin;
+                    case 2:
+                        rightShop = i;
+                        break;
+                    case 1:
+                    {
+                        dict.Add(i, i - rightShop);
+                        break;
+                    }
                 }
             }
 
-            return min.Value;
-        }
+            int? leftShop = null;
 
-        private static int GetMinForHouse(ref int? prev, ref int? next, ref int i)
-        {
-            if (prev == null)
+            for (var i = buildings.Count - 1; i >= 0; i--)
             {
-                return next.Value - i;
+                switch (buildings[i])
+                {
+                    case 2:
+                        leftShop = i;
+                        break;
+                    case 1:
+                    {
+                        var oldValue = dict[i];
+                        var diff = leftShop - i;
+
+                        var newValue = oldValue == null
+                            ? diff
+                            : diff < oldValue
+                                ? diff
+                                : oldValue;
+
+                        dict[i] = newValue;
+                        break;
+                    }
+                }
             }
 
-            if (next == null)
-            {
-                return i - prev.Value;
-            }
-
-            return Math.Min(next.Value - i, i - prev.Value);
-        }
-        
-        private static int? GetNext(IList<int> buildings, ref int index)
-        {
-            for (var i = index; i < buildings.Count; i++)
-            {
-                if (buildings[i] != 2) continue;
-                return i;
-            }
-
-            return null;
-        }
-
-        private static int? GetPrev(IList<int> buildings, ref int index)
-        {
-            for (var i = index - 1; i >= 0; i--)
-            {
-                if (buildings[i] != 2) continue;
-                return i;
-            }
-
-            return null;
+            var result = dict.Values.Max();
+            return result;
         }
     }
 }
