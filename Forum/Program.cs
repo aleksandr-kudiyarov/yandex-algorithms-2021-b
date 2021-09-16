@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Forum
 {
@@ -9,9 +8,8 @@ namespace Forum
         private static void Main()
         {
             var lines = File.ReadAllLines("input.txt");
-            var messagesCounter = 0;
-            var topics = new List<Topic>();
-            var messages = new Dictionary<int, Message>();
+            var linksToTopics = new List<Topic>();
+            Topic result = null;
 
             for (var i = 1; i < lines.Length;)
             {
@@ -25,44 +23,29 @@ namespace Forum
                         Messages = 1
                     };
                     
-                    var message = new Message
+                    linksToTopics.Add(topic);
+
+                    if (result == null)
                     {
-                        Id = ++messagesCounter,
-                        Topic = topic
-                    };
-                    
-                    topics.Add(topic);
-                    messages.Add(message.Id, message);
+                        result = topic;
+                    }
                     
                     i += 3;
                 }
                 else
                 {
                     var id = int.Parse(line);
-                    var topic = messages[id].Topic;
-                    
-                    var message = new Message
-                    {
-                        Id = ++messagesCounter,
-                        Topic = topic
-                    };
-                    
+                    var topic = linksToTopics[id - 1];
+
                     topic.Messages++;
-                    messages.Add(message.Id, message);
+                    linksToTopics.Add(topic);
+
+                    if (topic.Messages > result.Messages)
+                    {
+                        result = topic;
+                    }
                     
                     i += 2;
-                }
-            }
-
-            var result = topics.First();
-
-            for (var i = 1; i < topics.Count; i++)
-            {
-                var topic = topics[i];
-
-                if (topic.Messages > result.Messages)
-                {
-                    result = topic;
                 }
             }
 
@@ -74,11 +57,5 @@ namespace Forum
     {
         public string Name { get; set; }
         public int Messages { get; set; }
-    }
-
-    public class Message
-    {
-        public int Id { get; set; }
-        public Topic Topic { get; set; }
     }
 }
