@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MaxSum
 {
@@ -18,47 +17,9 @@ namespace MaxSum
             var lines = File.ReadAllLines(path);
             var array = lines[1].Trim().Split().ToInts();
             var prefixSums = array.GetPrefixSums();
-            var max = long.MinValue;
+            var result = prefixSums.GetMaxSum();
 
-            if (array.All(n => n >= 0)
-                || array.All(n => n <= 0))
-            {
-                max = prefixSums.Skip(1).Max();
-            }
-            else
-            {
-                var borders = new HashSet<int>();
-                
-                borders.Add(0);
-                
-                for (var i = 0; i < array.Count; i++)
-                {
-                    if (array[i] < 0)
-                    {
-                        borders.Add(i);
-                    }
-                }
-
-                borders.Add(array.Count - 1);
-                var bordersList = borders.ToList();
-
-                for (var i = 0; i < borders.Count - 1; i++)
-                {
-                    for (var j = i + 1; j < borders.Count; j++)
-                    {
-                        var l = bordersList[i];
-                        var r = bordersList[j];
-                        var sum = prefixSums.GetSum(l, r - 1);
-
-                        if (sum > max)
-                        {
-                            max = sum;
-                        }
-                    }
-                }
-            }
-            
-            return max;
+            return result;
         }
 
         private static IReadOnlyList<long> ToInts(this IReadOnlyCollection<string> source)
@@ -87,9 +48,28 @@ namespace MaxSum
             return sums;
         }
 
-        private static long GetSum(this IReadOnlyList<long> source, int l, int r)
+        private static long GetMaxSum(this IReadOnlyList<long> source)
         {
-            return source[r + 1] - source[l];
+            var l = source[0];
+            var maxDiff = long.MinValue;
+
+            for (var i = 1; i < source.Count; i++)
+            {
+                var sum = source[i];
+                var diff = sum - l;
+
+                if (sum < l)
+                {
+                    l = sum;
+                }
+
+                if (diff > maxDiff)
+                {
+                    maxDiff = diff;
+                }
+            }
+
+            return maxDiff;
         }
     }
 }
