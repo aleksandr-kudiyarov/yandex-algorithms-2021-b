@@ -124,11 +124,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "B-MaxSum", "B-MaxSum", "{B3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxSum", "MaxSum\MaxSum.csproj", "{D8A05576-C74C-4098-A8BB-5D9C7AADE973}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "С-ComputerForEveryone", "С-ComputerForEveryone", "{69A7E8EF-A3C6-492F-8B82-4175D32B93B7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C-ComputerForEveryone", "C-ComputerForEveryone", "{69A7E8EF-A3C6-492F-8B82-4175D32B93B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerForEveryone.Tests", "ComputerForEveryone.Tests\ComputerForEveryone.Tests.csproj", "{D69A342C-FE0C-4ADE-AD9C-A5596EAB0F1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerForEveryone", "ComputerForEveryone\ComputerForEveryone.csproj", "{AAFC09AF-4743-433C-A4EC-1A8DADFE6D03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "D-BracketSequence", "D-BracketSequence", "{F654271B-9710-4791-8347-8F9CF5E4BD42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -196,6 +198,7 @@ Global
 		{69A7E8EF-A3C6-492F-8B82-4175D32B93B7} = {8E91D501-0D93-4516-9DAE-AC6E21C9F5E9}
 		{D69A342C-FE0C-4ADE-AD9C-A5596EAB0F1D} = {69A7E8EF-A3C6-492F-8B82-4175D32B93B7}
 		{AAFC09AF-4743-433C-A4EC-1A8DADFE6D03} = {69A7E8EF-A3C6-492F-8B82-4175D32B93B7}
+		{F654271B-9710-4791-8347-8F9CF5E4BD42} = {8E91D501-0D93-4516-9DAE-AC6E21C9F5E9}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7F9DBD5E-DF84-4AC3-88B4-25647692B3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
