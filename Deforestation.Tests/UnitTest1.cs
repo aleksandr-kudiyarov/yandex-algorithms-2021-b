@@ -12,6 +12,7 @@ namespace Deforestation.Tests
         [InlineData("2-input", "2-output")]
         [InlineData("3-input", "3-output")]
         [InlineData("4-input", "4-output")]
+        [InlineData("15-input", "15-output")]
         public void Test1(string input, string output)
         {
             input = Path + input;

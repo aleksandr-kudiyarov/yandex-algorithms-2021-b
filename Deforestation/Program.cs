@@ -19,10 +19,10 @@ namespace Deforestation
             return result.ToString();
         }
 
-        private static int LeftBinarySearch(DeforestationWorker worker)
+        private static long LeftBinarySearch(DeforestationWorker worker)
         {
-            var l = 0;
-            var r = 1000000;
+            var l = 0L;
+            var r = long.MaxValue;
             
             while (l < r)
             {
@@ -68,13 +68,24 @@ namespace Deforestation
 
         public long Calc(long day)
         {
-            var daysDmitryWorks = day - day / _dmitryRestDay;
-            var daysFedorWorks = day - day / _fedorRestDay;
+            checked
+            {
+                try
+                {
+                    var daysDmitryWorks = day - day / _dmitryRestDay;
+                    var daysFedorWorks = day - day / _fedorRestDay;
 
-            var result = daysDmitryWorks * _dmitryTreesPerDay
-                         + daysFedorWorks * _fedorTreesPerDay;
+                    var dmitryTrees = daysDmitryWorks * _dmitryTreesPerDay;
+                    var fedorTrees = daysFedorWorks * _fedorTreesPerDay;
 
-            return _trees - result;
+                    var result = dmitryTrees + fedorTrees;
+                    return _trees - result;
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
         }
     }
 }
