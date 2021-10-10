@@ -40,7 +40,9 @@ namespace Covering
 
             while (l < r)
             {
-                var m = (l + r) / 2;
+                var sum = (long)l + (long)r; 
+                var longM = sum / 2;
+                var m = (int)longM;
                 var current = points.TryCover(segments, m);
                 
                 if (current > 0)
