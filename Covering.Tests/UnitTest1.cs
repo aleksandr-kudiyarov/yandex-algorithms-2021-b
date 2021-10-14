@@ -9,7 +9,8 @@ namespace Covering.Tests
         
         [Theory]
         [InlineData("1-input", "1-output")]
-        [InlineData("2-input", "1-output")]
+        [InlineData("2-input", "2-output")]
+        [InlineData("1-my-input", "1-my-output")]
         public void Test1(string input, string output)
         {
             input = Path + input;

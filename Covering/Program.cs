@@ -15,7 +15,7 @@ namespace Covering
         
         public static string GetResult(IReadOnlyList<string> lines)
         {
-            var segments = int.Parse(lines[0]
+            var segments = long.Parse(lines[0]
                 .Trim()
                 .Split()
                 .ElementAt(1));
@@ -28,75 +28,42 @@ namespace Covering
                 .OrderBy(v => v)
                 .ToList();
 
-            var result = LeftBinarySearch(points, segments);
+            var result = points.GetYandexResult(segments);
 
             return result.ToString();
         }
 
-        private static int LeftBinarySearch(IReadOnlyList<long> points, int segments)
+        private static long GetYandexResult(this IReadOnlyList<long> points, long segments)
         {
-            var l = 0;
-            var r = points.Count - 1;
+            var l = 0L;
+            var r = points[points.Count - 1] - points[0];
 
             while (l < r)
             {
-                var sum = (long)l + (long)r; 
-                var longM = sum / 2;
-                var m = (int)longM;
-                var current = points.TryCover(segments, m);
-                
-                if (current > 0)
+                var count = 0;
+                var m = (l + r) / 2;
+                var maxright = points[0] - 1;
+
+                foreach (var point in points)
                 {
-                    l = m + 1;
+                    if (point > maxright)
+                    {
+                        count++;
+                        maxright = point + m;
+                    }
+                }
+
+                if (count <= segments)
+                {
+                    r = m;
                 }
                 else
                 {
-                    r = m;
+                    l = m + 1;
                 }
             }
 
             return l;
-        }
-
-        private static int TryCover(this IReadOnlyList<long> points, int segments, int length)
-        {
-            checked
-            {
-                var sum = 0L;
-                var firstInSegmentInd = 0;
-                var lastInSegmentInd = length;
-            
-                for (var i = 0; i < segments; i++)
-                {
-                    if (lastInSegmentInd > points.Count - 1)
-                    {
-                        return 1;
-                    }
-                
-                    var first = points[firstInSegmentInd];
-                    var last = points[lastInSegmentInd];
-                    var diff = last - first;
-                    var increment = length + 1;
-
-                    sum += diff;
-                    firstInSegmentInd += increment;
-                    lastInSegmentInd += increment;
-                }
-
-                var expected = segments * length;
-
-                if (sum > expected)
-                {
-                    return 1;
-                }
-            
-                if (sum < expected)
-                {
-                    return -1;
-                }
-
-                return 0;   
-            }
         }
     }
 }
