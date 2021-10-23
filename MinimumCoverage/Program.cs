@@ -20,15 +20,15 @@ namespace MinimumCoverage
         {
             var m = int.Parse(lines[0].Trim());
             var events = GetEvents(lines, m);
-
-            if (events.Count == 0)
-            {
-                return NoSolution;
-            }
             
             var orderedEvents = events
                 .OrderBy(segment => segment, Event.DefaultComparer)
                 .ToList();
+            
+            if (orderedEvents.Count == 0 || orderedEvents[0].Coordinate > 0)
+            {
+                return NoSolution;
+            }
 
             var currentSegment = orderedEvents[0].Parent;
             var longestSegment = currentSegment;
@@ -49,13 +49,6 @@ namespace MinimumCoverage
                     if (segment.End.Coordinate > longestSegment.End.Coordinate)
                     {
                         longestSegment = segment;
-
-                        if (longestSegment.End.Coordinate >= m)
-                        {
-                            resultList.Add(currentSegment);
-                            resultList.Add(longestSegment);
-                            break;
-                        }
                     }
                 }
 
@@ -65,8 +58,25 @@ namespace MinimumCoverage
                     {
                         resultList.Add(segment);
                         currentSegment = longestSegment;
+                        
+                        if (longestSegment.End.Coordinate >= m)
+                        {
+                            if (!ReferenceEquals(segment, longestSegment))
+                            {
+                                resultList.Add(longestSegment);   
+                            }
+                            
+                            break;
+                        }
                     }
                 }
+            }
+
+            var lastEvent = resultList.LastOrDefault();
+
+            if (lastEvent != null && lastEvent.End.Coordinate < m)
+            {
+                return NoSolution;
             }
 
             return $"{resultList.Count}" +
@@ -131,25 +141,18 @@ namespace MinimumCoverage
                 }
             }
             
-            //
             var longestZeroSegment = zeroSegments.FirstOrDefault();
 
             if (longestZeroSegment != null)
             {
-                foreach (var segment in zeroSegments)
+                foreach (var segment in zeroSegments.Where(segment => segment.End.Coordinate > longestZeroSegment.End.Coordinate))
                 {
-                    if (segment.End.Coordinate > longestZeroSegment.End.Coordinate)
-                    {
-                        longestZeroSegment = segment;
-                    }
+                    longestZeroSegment = segment;
                 }
 
                 events.Add(longestZeroSegment.Begin);
                 events.Add(longestZeroSegment.End);
             }
-            
-            
-            //
 
             return events;
         }
@@ -159,11 +162,6 @@ namespace MinimumCoverage
     {
         public Event Begin { get; set; }
         public Event End { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Begin.Coordinate} {End.Coordinate}";
-        }
     }
 
     public class Event
@@ -172,11 +170,6 @@ namespace MinimumCoverage
         public Segment Parent { get; set; }
         public int Coordinate { get; set; }
         public EventType Type { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Type}: {Coordinate}";
-        }
 
         private class Comparer : IComparer<Event>
         {

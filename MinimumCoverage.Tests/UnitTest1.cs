@@ -9,11 +9,13 @@ namespace MinimumCoverage.Tests
         private const string Path = @"D:\Repos\Kudiyarov.YandexAlgorithms\MinimumCoverage.Tests\TestCases\";
         
         [Theory]
-        [InlineData("1-input", "1-output")]
+        [InlineData("1-input", "no-solution")]
         [InlineData("2-input", "2-output")]
         [InlineData("4-input", "4-output")]
         [InlineData("5-input", "5-output")]
         [InlineData("6-input", "6-output")]
+        [InlineData("8-input", "no-solution")]
+        [InlineData("13-input", "no-solution")]
         public void Test1(string input, string output)
         {
             input = Path + input;
