@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -6,6 +7,8 @@ namespace KittensFullness
 {
     public static class Program
     {
+        private static readonly char[] Separators = { ' ' }; 
+        
         private static void Main()
         {
             var input = File.ReadAllLines("input.txt");
@@ -15,31 +18,28 @@ namespace KittensFullness
 
         public static string GetResult(IReadOnlyList<string> lines)
         {
-            var catEvents = GetCatEvents(lines[1]);
+            var catsDictionary = GetCatDictionary(lines[1]);
+            var catEvents = GetCatEvents(catsDictionary);
             var segmentEvents = GetSegmentEvents(lines);
             
             var events = catEvents
                 .Concat(segmentEvents)
-                .OrderBy(e => e, Event.DefaultComparer)
-                .ToList();
+                .OrderBy(e => e, Event.DefaultComparer);
 
-            var currentSegments = new List<Segment>(events.Count / 2);
+            var catsNow = 0;
 
             foreach (var @event in events)
             {
                 switch (@event.Type)
                 {
                     case EventType.Begin:
-                        currentSegments.Add(@event.Parent);
+                        @event.Parent.CatsAtBegin = catsNow;
                         break;
                     case EventType.End:
-                        currentSegments.Remove(@event.Parent);
+                        @event.Parent.CatsAtEnd = catsNow;
                         break;
                     case EventType.CatFound:
-                        foreach (var segment in currentSegments)
-                        {
-                            segment.Cats++;
-                        }
+                        catsNow = catsDictionary[@event.Coordinate];
                         break;
                 }
             }
@@ -52,13 +52,26 @@ namespace KittensFullness
             return result;
         }
 
+        private static IEnumerable<Event> GetCatEvents(IReadOnlyDictionary<int, int> catsDictionary)
+        {
+            var events = catsDictionary.Keys
+                .Select(key =>
+                    new Event
+                    {
+                        Coordinate = key,
+                        Type = EventType.CatFound
+                    });
+            
+            return events;
+        }
+
         private static IReadOnlyList<Event> GetSegmentEvents(IReadOnlyList<string> lines)
         {
             var segmentEvents = new List<Event>(lines.Count - 2);
 
             for (var i = 2; i < lines.Count; i++)
             {
-                var line = lines[i].Split();
+                var line = lines[i].Split(Separators, StringSplitOptions.RemoveEmptyEntries);
 
                 var segment = new Segment();
 
@@ -83,27 +96,33 @@ namespace KittensFullness
             return segmentEvents;
         }
 
-        private static IReadOnlyList<Event> GetCatEvents(string line)
+        private static IReadOnlyDictionary<int, int> GetCatDictionary(string line)
         {
-            return line
-                .Split()
-                .Select(GetCatEvent)
-                .ToList();
-        }
+            var count = 0;
+            var splittedLine = line.Split(Separators, StringSplitOptions.RemoveEmptyEntries);
+                
+            var coordinates = splittedLine
+                .Select(int.Parse)
+                .OrderBy(i => i);
+            
+            var dictionary = new Dictionary<int, int>(splittedLine.Length);
 
-        private static Event GetCatEvent(string value)
-        {
-            return new Event
+            foreach (var coordinate in coordinates)
             {
-                Coordinate = int.Parse(value),
-                Type = EventType.CatFound
-            };
+                count++;
+                dictionary[coordinate] = count;
+            }
+
+            return dictionary;
         }
     }
 
     public class Segment
     {
-        public int Cats { get; set; }
+        public int Cats => CatsAtEnd - CatsAtBegin;
+
+        public int CatsAtBegin { get; set; }
+        public int CatsAtEnd { get; set; }
     }
 
     public class Event
