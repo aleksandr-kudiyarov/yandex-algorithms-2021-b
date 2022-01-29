@@ -3,9 +3,8 @@ using Xunit;
 
 namespace BinaryTree.Tests;
 
-public class UnitTest1 : YandexTest
+public sealed class UnitTest1 : YandexTest
 {
-    protected override string Path => @"D:\Repos\Kudiyarov.YandexAlgorithms\BinaryTree.Tests\TestCases\";
     protected override IYandexProgram Program { get; } = new Program();
 
     [Theory]

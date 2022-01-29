@@ -5,16 +5,26 @@ namespace BaseUnitTest;
 
 public abstract class YandexTest
 {
-    protected abstract string Path { get; }
+    private readonly string _path;
+
+    protected YandexTest()
+    {
+        var type = GetType();
+        _path = $"D:/Repos/Kudiyarov.YandexAlgorithms/{type.Namespace}/TestCases/";
+    }
+
     protected abstract IYandexProgram Program { get; }
 
     protected void InnerTest(string input, string output)
     {
-        input = Path + input;
-        output = Path + output;
-        var lines = File.ReadAllLines(input);
-        var expected = File.ReadAllText(output);
-        var actual = Program.GetResult(lines);
+        // arrange
+        var inputData = File.ReadAllLines(_path + input);
+        var expected = File.ReadAllText(_path + output);
+        
+        // act
+        var actual = Program.GetResult(inputData);
+        
+        // assert
         Assert.Equal(expected, actual);
     }
 }

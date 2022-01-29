@@ -6,7 +6,7 @@ using BaseUnitTest;
 
 namespace BinaryTree
 {
-    public class Program : IYandexProgram
+    public sealed class Program : IYandexProgram
     {
         private static void Main()
         {
