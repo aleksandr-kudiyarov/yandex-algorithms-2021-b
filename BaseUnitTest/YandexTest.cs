@@ -13,8 +13,6 @@ public abstract class YandexTest
         _path = $"D:/Repos/Kudiyarov.YandexAlgorithms/{type.Namespace}/TestCases/";
     }
 
-    protected abstract IYandexProgram Program { get; }
-
     protected void InnerTest(string input, string output)
     {
         // arrange
@@ -22,9 +20,11 @@ public abstract class YandexTest
         var expected = File.ReadAllText(_path + output);
         
         // act
-        var actual = Program.GetResult(inputData);
+        var actual = GetActual(inputData);
         
         // assert
         Assert.Equal(expected, actual);
     }
+
+    protected abstract string GetActual(string[] input);
 }
