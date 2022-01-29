@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -56,14 +57,6 @@ namespace BinaryTree
 
             throw new NotImplementedException();
         }
-
-        private int GetArgument(string command)
-        {
-            var parameters = command.Split();
-            var stringArgument = parameters[1];
-            var argument = int.Parse(stringArgument);
-            return argument;
-        }
     }
 
     public class Tree<T>
@@ -83,7 +76,7 @@ namespace BinaryTree
             return true;
         }
 
-        private bool Add(T value, Node<T> node)
+        private static bool Add(T value, Node<T> node)
         {
             var compare = value.CompareTo(node.Value);
             
@@ -119,7 +112,7 @@ namespace BinaryTree
             return Search(value, Root);
         }
 
-        private bool Search(T value, Node<T> node)
+        private static bool Search(T value, Node<T> node)
         {
             if (node == null)
             {
@@ -141,7 +134,52 @@ namespace BinaryTree
 
         public string Print()
         {
-            return null;
+            var presentations = GetNodePresentations();
+            var strings = presentations.Select(presentation => presentation.GetString());
+            var result = string.Join(Environment.NewLine, strings);
+            return result;
+        }
+
+        private IReadOnlyList<NodePresentation<T>> GetNodePresentations()
+        {
+            var list = new List<NodePresentation<T>>();
+            AddNodePresentation(Root, 0, list);
+            return list;
+        }
+
+        private static void AddNodePresentation(Node<T> node, int level, IList<NodePresentation<T>> list)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            
+            var presentation = new NodePresentation<T>(node.Value, level);
+            list.Add(presentation);
+
+            var nextLevel = ++level;
+            AddNodePresentation(node.Left, nextLevel, list);
+            AddNodePresentation(node.Right, nextLevel, list);
+        }
+    }
+
+    public struct NodePresentation<T>
+    {
+        public NodePresentation(
+            T value,
+            int level)
+        {
+            _value = value;
+            _level = level;
+        }
+
+        private readonly T _value;
+        private readonly int _level;
+
+        public string GetString()
+        {
+            var dots = new string('.', _level);
+            return $"{dots}{_value}";
         }
     }
 
@@ -152,7 +190,7 @@ namespace BinaryTree
             
         }
 
-        public T Value { get; set; }
+        public T Value { get; private set; }
         public Node<T> Left { get; set; }
         public Node<T> Right { get; set; }
 
