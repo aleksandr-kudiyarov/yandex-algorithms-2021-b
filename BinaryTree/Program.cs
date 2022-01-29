@@ -46,7 +46,7 @@ namespace BinaryTree
             switch (commandName)
             {
                 case "ADD":
-                    return _tree.Add(argument)
+                    return _tree.TryAdd(argument)
                         ? "DONE"
                         : "ALREADY";
                 case "SEARCH":
@@ -62,21 +62,32 @@ namespace BinaryTree
     public class Tree<T>
         where T : IComparable<T>
     {
-        private Node<T> Root { get; set; }
+        private Node<T> _root;
+        private int _count;
 
-        public bool Add(T value)
+        public bool TryAdd(T value)
         {
-            if (Root != null)
+            bool isAdded;
+
+            if (_root == null)
             {
-                return Add(value, Root);
+                _root = Node<T>.Create(value);
+                isAdded = true;
+            }
+            else
+            {
+                isAdded = TryAdd(value, _root);
             }
 
-            Root = Node<T>.Create(value);
+            if (isAdded)
+            {
+                _count++;
+            }
 
-            return true;
+            return isAdded;
         }
 
-        private static bool Add(T value, Node<T> node)
+        private static bool TryAdd(T value, Node<T> node)
         {
             while (true)
             {
@@ -114,7 +125,7 @@ namespace BinaryTree
 
         public bool Search(T value)
         {
-            return Search(value, Root);
+            return Search(value, _root);
         }
 
         private static bool Search(T value, Node<T> node)
@@ -152,8 +163,8 @@ namespace BinaryTree
 
         private IReadOnlyList<NodePresentation<T>> GetNodePresentations()
         {
-            var list = new List<NodePresentation<T>>();
-            AddNodePresentation(Root, 0, list);
+            var list = new List<NodePresentation<T>>(_count);
+            AddNodePresentation(_root, 0, list);
             return list;
         }
 
