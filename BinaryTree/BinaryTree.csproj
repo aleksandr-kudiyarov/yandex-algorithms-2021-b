@@ -6,4 +6,8 @@
         <LangVersion>6</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BaseUnitTest\BaseUnitTest.csproj" />
+    </ItemGroup>
+
 </Project>

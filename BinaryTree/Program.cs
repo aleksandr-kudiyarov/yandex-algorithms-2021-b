@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BaseUnitTest;
 
 namespace BinaryTree
 {
-    public static class Program
+    public class Program : IYandexProgram
     {
         private static void Main()
         {
@@ -14,12 +15,17 @@ namespace BinaryTree
             File.WriteAllText("output.txt", result);
         }
 
-        public static string GetResult(string[] input)
+        private static string GetResult(string[] input)
         {
             var controller = new TreeController();
             var result = string.Join(Environment.NewLine,
                 input.Select(command => controller.Execute(command)));
             return result;
+        }
+
+        string IYandexProgram.GetResult(string[] input)
+        {
+            return GetResult(input);
         }
     }
 
@@ -153,12 +159,13 @@ namespace BinaryTree
             {
                 return;
             }
+
+            var nextLevel = level + 1;
+            AddNodePresentation(node.Left, nextLevel, list);
             
             var presentation = new NodePresentation<T>(node.Value, level);
             list.Add(presentation);
-
-            var nextLevel = ++level;
-            AddNodePresentation(node.Left, nextLevel, list);
+            
             AddNodePresentation(node.Right, nextLevel, list);
         }
     }

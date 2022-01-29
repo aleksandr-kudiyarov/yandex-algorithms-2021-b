@@ -6,6 +6,7 @@ namespace BaseUnitTest;
 public abstract class YandexTest
 {
     protected abstract string Path { get; }
+    protected abstract IYandexProgram Program { get; }
 
     protected void InnerTest(string input, string output)
     {
@@ -13,9 +14,7 @@ public abstract class YandexTest
         output = Path + output;
         var lines = File.ReadAllLines(input);
         var expected = File.ReadAllText(output);
-        var actual = GetActual(lines);
+        var actual = Program.GetResult(lines);
         Assert.Equal(expected, actual);
     }
-
-    protected abstract string GetActual(string[] input);
 }
