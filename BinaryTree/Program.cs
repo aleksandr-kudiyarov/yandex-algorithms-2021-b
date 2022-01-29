@@ -78,33 +78,38 @@ namespace BinaryTree
 
         private static bool Add(T value, Node<T> node)
         {
-            var compare = value.CompareTo(node.Value);
-            
-            switch (compare)
+            while (true)
             {
-                case -1:
-                    if (node.Left == null)
-                    {
-                        node.Left = Node<T>.Create(value);
-                        return true;
-                    }
-                    else
-                    {
-                        return Add(value, node.Left);
-                    }
-                case 1:
-                    if (node.Right == null)
-                    {
-                        node.Right = Node<T>.Create(value);
-                        return true;
-                    }
-                    else
-                    {
-                        return Add(value, node.Right);
-                    }
-            }
+                var compare = value.CompareTo(node.Value);
 
-            return false;
+                switch (compare)
+                {
+                    case -1:
+                        if (node.Left == null)
+                        {
+                            node.Left = Node<T>.Create(value);
+                            return true;
+                        }
+                        else
+                        {
+                            node = node.Left;
+                            continue;
+                        }
+                    case 1:
+                        if (node.Right == null)
+                        {
+                            node.Right = Node<T>.Create(value);
+                            return true;
+                        }
+                        else
+                        {
+                            node = node.Right;
+                            continue;
+                        }
+                }
+
+                return false;
+            }
         }
 
         public bool Search(T value)
@@ -114,22 +119,27 @@ namespace BinaryTree
 
         private static bool Search(T value, Node<T> node)
         {
-            if (node == null)
+            while (true)
             {
-                return false;
-            }
-            
-            var compare = value.CompareTo(node.Value);
+                if (node == null)
+                {
+                    return false;
+                }
 
-            switch (compare)
-            {
-                case -1:
-                    return Search(value, node.Left);
-                case 1:
-                    return Search(value, node.Right);
-            }
+                var compare = value.CompareTo(node.Value);
 
-            return true;
+                switch (compare)
+                {
+                    case -1:
+                        node = node.Left;
+                        continue;
+                    case 1:
+                        node = node.Right;
+                        continue;
+                }
+
+                return true;
+            }
         }
 
         public string Print()
