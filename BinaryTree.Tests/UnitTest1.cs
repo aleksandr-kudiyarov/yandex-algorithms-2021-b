@@ -7,6 +7,7 @@ public class UnitTest1 : YandexTest
 {
     [Theory]
     [InlineData("1-input", "1-output")]
+    [InlineData("2-input", "1-output")]
     public void Test(string input, string output)
     {
         InnerTest(input, output);
