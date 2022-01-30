@@ -23,7 +23,7 @@ public abstract class YandexTest
         var actual = GetActual(inputData);
         
         // assert
-        Assert.Equal(expected, actual);
+        Assert.Equal(expected.Trim(), actual.Trim());
     }
 
     protected abstract string GetActual(string[] input);
