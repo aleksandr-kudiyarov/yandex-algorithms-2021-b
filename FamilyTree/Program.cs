@@ -15,7 +15,7 @@ namespace FamilyTree
         public static string GetResult(string[] input)
         {
             var count = int.Parse(input[0]);
-            var tree = new FamilyTree(count - 1);
+            var tree = new FamilyTree<string>(count - 1);
             FillTree(tree, input, count);
                
             var relations = GetRelations(tree, input, count);
@@ -23,7 +23,7 @@ namespace FamilyTree
             return output;
         }
 
-        private static IEnumerable<string> GetRelations(FamilyTree tree, IReadOnlyList<string> input, int count)
+        private static IEnumerable<string> GetRelations(FamilyTree<string> tree, IReadOnlyList<string> input, int count)
         {
             for (var i = count; i < input.Count; i++)
             {
@@ -35,7 +35,7 @@ namespace FamilyTree
             }
         }
 
-        private static void FillTree(FamilyTree tree, IReadOnlyList<string> input, int count)
+        private static void FillTree(FamilyTree<string> tree, IReadOnlyList<string> input, int count)
         {
             for (var i = 1; i < count; i++)
             {
@@ -47,23 +47,23 @@ namespace FamilyTree
         }
     }
 
-    public class FamilyTree
+    public class FamilyTree<T>
     {
-        private readonly Dictionary<string, Node<string>> _dictionary;
+        private readonly Dictionary<T, Node<T>> _dictionary;
 
         public FamilyTree(int capacity)
         {
-            _dictionary = new Dictionary<string, Node<string>>(capacity);
+            _dictionary = new Dictionary<T, Node<T>>(capacity);
         }
 
-        public void Add(string childrenName, string parentName)
+        public void Add(T childrenName, T parentName)
         {
             var parentNode = GetNode(parentName);
             var childrenNode = GetNode(childrenName);
             childrenNode.Parent = parentNode;
         }
 
-        public string GetRelation(string first, string second)
+        public string GetRelation(T first, T second)
         {
             var firstNode = _dictionary[first];
 
@@ -82,7 +82,7 @@ namespace FamilyTree
             return "0";
         }
 
-        private static bool TryGetParent(string name, Node<string> node)
+        private static bool TryGetParent(T name, Node<T> node)
         {
             while (true)
             {
@@ -91,7 +91,7 @@ namespace FamilyTree
                     return false;
                 }
 
-                if (node.Value == name)
+                if (Equals(node.Value, name))
                 {
                     return true;
                 }
@@ -100,13 +100,13 @@ namespace FamilyTree
             }
         }
 
-        private Node<string> GetNode(string name)
+        private Node<T> GetNode(T name)
         {
-            Node<string> parentNode;
+            Node<T> parentNode;
                
             if (!_dictionary.TryGetValue(name, out parentNode))
             {
-                parentNode = new Node<string> { Value = name };
+                parentNode = new Node<T> { Value = name };
                 _dictionary[name] = parentNode;
             }
 
