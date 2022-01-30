@@ -66,46 +66,46 @@ namespace FamilyTreeLca
 
         public string GetLca(string first, string second)
         {
-            var set = new HashSet<string>();
-
             var firstNode = _dictionary[first];
             var secondNode = _dictionary[second];
-            
-            AddValue(set, firstNode);
-            var lca = GetLca(set, secondNode);
-            return lca;
+
+            var firstLevel = GetLevel(firstNode);
+            var secondLevel = GetLevel(secondNode);
+
+            while (firstLevel != secondLevel)
+            {
+                if (firstLevel > secondLevel)
+                {
+                    firstNode = firstNode.Parent;
+                    firstLevel--;
+                }
+                else
+                {
+                    secondNode = secondNode.Parent;
+                    secondLevel--;
+                }
+            }
+
+            while (!ReferenceEquals(firstNode, secondNode))
+            {
+                firstNode = firstNode.Parent;
+                secondNode = secondNode.Parent;
+            }
+
+            return firstNode.Value;
         }
 
-        private static void AddValue<T>(ICollection<T> collection, Node<T> node)
+        private static int GetLevel<T>(Node<T> node)
         {
-            while (true)
+            var level = 0;
+
+            while (node.Parent != null)
             {
-                if (node == null)
-                {
-                    return;
-                }
-
-                collection.Add(node.Value);
                 node = node.Parent;
+                level++;
             }
-        }
 
-        private static T GetLca<T>(ICollection<T> collection, Node<T> node)
-        {
-            while (true)
-            {
-                if (node == null)
-                {
-                    return default(T);
-                }
-
-                if (collection.Contains(node.Value))
-                {
-                    return node.Value;
-                }
-
-                node = node.Parent;
-            }
+            return level;
         }
 
         private Node<string> GetNode(string name)
@@ -115,7 +115,6 @@ namespace FamilyTreeLca
             if (!_dictionary.TryGetValue(name, out parentNode))
             {
                 parentNode = new Node<string> { Value = name };
-                
                 _dictionary[name] = parentNode;
             }
 
