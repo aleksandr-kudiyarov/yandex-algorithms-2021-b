@@ -52,19 +52,20 @@ namespace Beads
 
         public int FindLongest()
         {
-            var values = new List<int>();
+            var max = 0;
             
+            // todo bad moment
             var firsts = _dictionary.Values.Where(pair => pair.Links.Count == 1);
 
             foreach (var first in firsts)
             {
-                GetLength(first, null, 1, values);    
+                GetLength(first, null, 1, ref max);    
             }
-            
-            return values.Max();
+
+            return max;
         }
 
-        private static void GetLength(Node<T> node, Node<T> previousNode, int length, List<int> values)
+        private static void GetLength(Node<T> node, Node<T> previousNode, int length, ref int max)
         {
             var nextLinks = 0;
             var len = length + 1;
@@ -78,12 +79,15 @@ namespace Beads
 
                 nextLinks++;
 
-                GetLength(link, node, len, values);
+                GetLength(link, node, len, ref max);
             }
 
             if (nextLinks == 0)
             {
-                values.Add(length);
+                if (length > max)
+                {
+                    max = length;
+                }
             }
         }
 
