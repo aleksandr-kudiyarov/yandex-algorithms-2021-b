@@ -17,7 +17,7 @@ namespace Beads
         {
             var tree = new Tree<int>();
 
-            for (int i = 1; i < input.Length; i++)
+            for (var i = 1; i < input.Length; i++)
             {
                 var line = input[i];
                 var splittedLine = line.Split();
@@ -54,8 +54,13 @@ namespace Beads
         {
             var values = new List<int>();
             
-            var first = _dictionary.Values.First(pair => pair.Links.Count == 1);
-            GetLength(first, null, 1, values);
+            var firsts = _dictionary.Values.Where(pair => pair.Links.Count == 1);
+
+            foreach (var first in firsts)
+            {
+                GetLength(first, null, 1, values);    
+            }
+            
             return values.Max();
         }
 
@@ -88,10 +93,7 @@ namespace Beads
             
             if (!_dictionary.TryGetValue(value, out node))
             {
-                node = new Node<T>
-                {
-                    Value = value
-                };
+                node = Node<T>.Create(value);
                 
                 _dictionary.Add(value, node);
             }
@@ -102,7 +104,14 @@ namespace Beads
 
     public class Node<T>
     {
-        public T Value { get; set; }
-        public IList<Node<T>> Links { get; set; } = new List<Node<T>>();
+        private Node(T value)
+        {
+            Value = value;
+        }
+        
+        public T Value { get; }
+        public IList<Node<T>> Links { get; } = new List<Node<T>>();
+
+        public static Node<T> Create(T value) => new Node<T>(value);
     }
 }
