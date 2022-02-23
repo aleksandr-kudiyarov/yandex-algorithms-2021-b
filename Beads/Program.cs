@@ -20,9 +20,9 @@ namespace Beads
             for (var i = 1; i < input.Length; i++)
             {
                 var line = input[i];
-                var splittedLine = line.Split();
-                var a = int.Parse(splittedLine[0]);
-                var b = int.Parse(splittedLine[1]);
+                var splitted = line.Split();
+                var a = int.Parse(splitted[0]);
+                var b = int.Parse(splitted[1]);
                 
                 tree.Add(a, b);
             }
@@ -46,26 +46,42 @@ namespace Beads
             var nodeA = GetOrCreate(a);
             var nodeB = GetOrCreate(b);
             
+            LinkNodes(nodeA, nodeB);
+        }
+        
+        public int FindLongest()
+        {
+            var further = default(Node<T>); 
+            var longest = default(int);
+            
+            var first = _dictionary.Values.First(pair => pair.Links.Count == 1);
+
+            GetLength(first, null, 1, ref longest, ref further);
+            GetLength(further, null, 1, ref longest, ref further);
+
+            return longest;
+        }
+        
+        private Node<T> GetOrCreate(T value)
+        {
+            Node<T> node;
+            
+            if (!_dictionary.TryGetValue(value, out node))
+            {
+                node = Node<T>.Create();
+                _dictionary.Add(value, node);
+            }
+
+            return node;
+        }
+        
+        private static void LinkNodes(Node<T> nodeA, Node<T> nodeB)
+        {
             nodeA.Links.Add(nodeB);
             nodeB.Links.Add(nodeA);
         }
 
-        public int FindLongest()
-        {
-            var max = 0;
-            
-            // todo bad moment
-            var firsts = _dictionary.Values.Where(pair => pair.Links.Count == 1);
-
-            foreach (var first in firsts)
-            {
-                GetLength(first, null, 1, ref max);    
-            }
-
-            return max;
-        }
-
-        private static void GetLength(Node<T> node, Node<T> previousNode, int length, ref int max)
+        private static void GetLength(Node<T> node, Node<T> previousNode, int length, ref int longest, ref Node<T> further)
         {
             var nextLinks = 0;
             var len = length + 1;
@@ -79,43 +95,20 @@ namespace Beads
 
                 nextLinks++;
 
-                GetLength(link, node, len, ref max);
+                GetLength(link, node, len, ref longest, ref further);
             }
 
-            if (nextLinks == 0)
+            if (nextLinks == 0 && length > longest)
             {
-                if (length > max)
-                {
-                    max = length;
-                }
+                longest = length;
+                further = node;
             }
-        }
-
-        private Node<T> GetOrCreate(T value)
-        {
-            Node<T> node;
-            
-            if (!_dictionary.TryGetValue(value, out node))
-            {
-                node = Node<T>.Create(value);
-                
-                _dictionary.Add(value, node);
-            }
-
-            return node;
         }
     }
 
     public class Node<T>
     {
-        private Node(T value)
-        {
-            Value = value;
-        }
-        
-        public T Value { get; }
         public IList<Node<T>> Links { get; } = new List<Node<T>>();
-
-        public static Node<T> Create(T value) => new Node<T>(value);
+        public static Node<T> Create() => new Node<T>();
     }
 }
